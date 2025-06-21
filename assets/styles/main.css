@@ -2,8 +2,11 @@ p {
     font-family: "Roboto";
 }
 canvas {
+    width: 95%;
+    height: 95%;
     display: block;
     margin: 0 auto;
     box-sizing: border-box;
+    border: 4px solid #000000;
     z-index: 1;
 }

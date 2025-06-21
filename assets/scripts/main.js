@@ -10,7 +10,7 @@ let drawRect = (x, y, width, height, color) => {ctx.fillStyle = color; ctx.fillR
 
 function draw() {
     clearCanvas()
-    drawRect(Math.random() * 350 + 50, Math.random() * 350 + 50, Math.random() * 350 + 50, Math.random() * 350 + 50, "#000000")
+    drawRect(Math.floor(Math.random() * 350 + 50), Math.floor(Math.random() * 350 + 50), 50, 50, "#000000")
 }
 
-setInterval(draw, 20)
+setInterval(draw, 50)

@@ -1,1 +1,9 @@
-
+p {
+    font-family: "Roboto";
+}
+canvas {
+    display: block;
+    margin: 0 auto;
+    box-sizing: border-box;
+    z-index: 1;
+}

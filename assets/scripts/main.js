@@ -2,7 +2,7 @@
 
 const canvas = $("#canvas");
 const ctx = canvas.getContext("2d");
-const FPS = 50
+const FPS = 50;
 
 /* FUNCTIONS */
 
@@ -14,4 +14,4 @@ function draw() {
     clearCanvas()
 }
 
-setInterval(draw, 1000 / FPS)
+setInterval(draw, Math.ceil(1000 / FPS));

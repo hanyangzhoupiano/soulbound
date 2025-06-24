@@ -203,6 +203,11 @@ function draw() {
 }
 
 function start() {
+    const bossMusic = new Audio("assets/audio/final_boss_1.mp3");
+    bossMusic.loop = true;
+    bossMusic.volume = 1;
+    bossMusic.play();
+    
     let player = {
         x: (CANVAS_WIDTH / 2) - SQUARE_SIZE,
         y: (CANVAS_HEIGHT / 2) - SQUARE_SIZE,

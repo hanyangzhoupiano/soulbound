@@ -3,14 +3,6 @@
 const canvas = $("#canvas");
 const ctx = canvas.getContext("2d");
 
-const FPS = 50;
-
-const CANVAS_WIDTH = canvas.getBoundingClientRect().width;
-const CANVAS_HEIGHT = canvas.getBoundingClientRect().height;
-
-const SQUARE_SIZE = Math.ceil(CANVAS_WIDTH / 20);
-const SPEED = Math.ceil(SQUARE_SIZE / 10);
-
 /* SCALING */
 
 const dpr = window.devicePixelRatio || 1;
@@ -21,6 +13,20 @@ canvas.height = rect.height * dpr;
 
 ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
+/* SETTINGS */
+
+const FPS = 50;
+
+const CANVAS_WIDTH = canvas.width / dpr;
+const CANVAS_HEIGHT = canvas.height / dpr;
+
+const SQUARE_SIZE = Math.ceil(CANVAS_WIDTH / 20);
+const SPEED = 5;
+
+let animation_id;
+
+let running = true;
+
 /* VARIABLES */
 
 let players = [];
@@ -28,6 +34,16 @@ let squares = [];
 let square_amount = 5;
 
 let keys_pressed = [];
+let speed_boost = 0;
+
+let score = 0;
+
+const start_button = {
+    x: (CANVAS_WIDTH / 2) - Math.ceil(CANVAS_WIDTH / 10),
+    y: (CANVAS_HEIGHT / 2) + Math.ceil(CANVAS_HEIGHT / 8),
+    width: Math.ceil(CANVAS_WIDTH / 5),
+    height: 30
+}
 
 /* FUNCTIONS */
 
@@ -83,6 +99,8 @@ let wall = (x, y, width, height) => {
     return false;
 };
 
+/* USER INPUT */
+
 function keyDownHandler(e) {
     let index = keys_pressed.indexOf(e.key);
     if (index <= -1) {
@@ -97,14 +115,33 @@ function keyUpHandler(e) {
     }
 }
 
+function clickHandler(e) {
+    const rect = canvas.getBoundingClientRect();
+    const x = (e.clientX - rect.left);
+    const y = (e.clientY - rect.top);
+
+    if (
+        x >= start_button.x && x <= start_button.x + start_button.width &&
+        y >= start_button.y && y <= start_button.y + start_button.height
+    ) {
+        document.removeEventListener("click", clickHandler);
+        start();
+    }
+}
+
 function draw() {
+    if (!running) return;
+    
     clearCanvas();
     
+    drawText(CANVAS_WIDTH / 2, 20, "18px Arial", "Score: " + score, "#000000");
+    
     for (const square of squares) {
-        drawRect(square.x, square.y, square.width, square.height, square.color);
+        drawRect(square.x, square.y, square.width, square.height, "#000000");
+        drawRect(square.x + 4, square.y + 4, square.width - 8, square.height - 8, square.color);
         
-        let new_x = square.x + square.vx;
-        let new_y = square.y + square.vy;
+        let new_x = square.x + (square.vx + Math.sign(square.vx) * speed_boost);
+        let new_y = square.y + (square.vy + Math.sign(square.vy) * speed_boost);
         
         let collision_detected = false;
         
@@ -145,24 +182,35 @@ function draw() {
         }
         
         for (const player of players) {
-            if (collision(new_x, new_y, square.width, square.height, player.x, player.y, player.width, player.height)) {
+            if (!player.invincible && collision(new_x, new_y, square.width, square.height, player.x, player.y, player.width, player.height)) {
+                player.invincible = true;
+                setTimeout(() => {player.invincible = false}, 300);
+                
+                player.health -= Math.random < 0.3 ? 20 : 5;
+                
+                if (player.health <= 0) {
+                    cancelAnimationFrame(animation_id);
+                    running = false;
+                    alert("Game Over! Score: " + score);
+                    window.location.reload();
+                };
             }
         }
         
         if (new_x + square.width >= CANVAS_WIDTH) {
-            square.vx = Math.sign(square.vx) * -square.vx;
+            square.vx = -SPEED - speed_boost;
         }
         
         if (new_x < 0) {
-            square.vx = SPEED;
+            square.vx = SPEED + speed_boost;
         }
         
         if (new_y + square.height >= CANVAS_HEIGHT) {
-            square.vy = -SPEED;
+            square.vy = -SPEED - speed_boost;
         }
         
         if (new_y < 0) {
-            square.vy = 2;
+            square.vy = SPEED + speed_boost;
         }
         
         if (!collision_detected) {
@@ -186,8 +234,8 @@ function draw() {
         if (dx !== 0 || dy !== 0) {
             const len = Math.sqrt(dx * dx + dy * dy);
             
-            dx = (dx / len) * SPEED;
-            dy = (dy / len) * SPEED;
+            dx = (dx / len) * player.speed;
+            dy = (dy / len) * player.speed;
         
             player.x += dx;
             player.y += dy;
@@ -198,7 +246,11 @@ function draw() {
         player.x = Math.min(player.x, CANVAS_WIDTH - SQUARE_SIZE)
         player.y = Math.min(player.y, CANVAS_HEIGHT - SQUARE_SIZE)
         
-        drawRect(player.x, player.y, player.width, player.height, player.color);
+        drawRect(player.x, player.y, player.width, player.height, "#000000");
+        drawRect(player.x + 4, player.y + 4, player.width - 8, player.height - 8, player.invincible ? player.color.invincible : player.color.normal);
+        
+        drawRect(player.x - 4, player.y - 30, player.width + 8, 15, "#000000");
+        drawRect(player.x - 2, player.y - 28, Math.ceil((player.health / player.max_health) * (player.width + 4)), 11, "#22f22c");
     };
 }
 
@@ -213,9 +265,14 @@ function start() {
         y: (CANVAS_HEIGHT / 2) - SQUARE_SIZE,
         width: SQUARE_SIZE,
         height: SQUARE_SIZE,
-        color: "#4287f5",
+        color: {
+            normal: "#4287f5",
+            invincible: "#f54024"
+        },
+        speed: 10,
         invincibility: false,
         health: 100,
+        max_health: 100,
         id: 1
     }
     
@@ -235,7 +292,7 @@ function start() {
                 vy: Math.random() < 0.5 ? SPEED : -SPEED,
                 width: SQUARE_SIZE,
                 height: SQUARE_SIZE,
-                color: "#000000",
+                color: `rgb(${Math.floor(Math.random()*256)}, ${Math.floor(Math.random()*256)}, ${Math.floor(Math.random()*256)})`,
                 id: i + 1
             };
             
@@ -245,15 +302,36 @@ function start() {
         squares.push(new_square);
     }
     
-    document.addEventListener('keydown', keyDownHandler, false);
-    document.addEventListener('keyup', keyUpHandler, false);
+    setInterval(() => {
+        if (Math.random() < 0.2 && !speed_boost) {
+            speed_boost = 5;
+            setTimeout(() => {speed_boost = 0}, 850);
+        }
+    }, 2000);
     
-    drawInterval = setInterval(draw, Math.ceil(1000 / FPS));
+    setInterval(() => {
+        score += 1;
+    }, 300);
+    
+    function gameLoop() {
+        draw();
+        animation_id = requestAnimationFrame(gameLoop);
+    }
+    
+    animation_id = requestAnimationFrame(gameLoop);
 }
 
 document.addEventListener("DOMContentLoaded", () => {
     clearCanvas();
-    drawRect((CANVAS_WIDTH / 2) - 20, 90, 40, 15, "#000000");
-    drawText(CANVAS_WIDTH / 2, 98, "14px Arial", "start", "#f52f25");
-    setTimeout(start, 1000);
+    drawText(start_button.x + start_button.width / 2, CANVAS_HEIGHT / 3, "80px Arial", "dodge the bouncing squares", "#000000");
+    
+    drawRect(start_button.x - 2, start_button.y - 2, start_button.width + 4, start_button.height + 4, "#000000");
+
+    drawRect(start_button.x, start_button.y, start_button.width, start_button.height, "#22f22c");
+    drawText(start_button.x + start_button.width / 2, start_button.y + 15, "18px Arial", "Start", "#000000");
+    
+    document.addEventListener('keydown', keyDownHandler, false);
+    document.addEventListener('keyup', keyUpHandler, false);
+    
+    document.addEventListener('click', clickHandler, false);
 });

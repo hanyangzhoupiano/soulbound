@@ -186,7 +186,7 @@ function draw() {
                 player.invincible = true;
                 setTimeout(() => {player.invincible = false}, 300);
                 
-                player.health -= Math.random < 0.3 ? 20 : 5;
+                player.health -= 20;
                 
                 if (player.health <= 0) {
                     cancelAnimationFrame(animation_id);

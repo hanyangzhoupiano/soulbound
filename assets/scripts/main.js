@@ -299,6 +299,10 @@ function draw() {
                 setTimeout(() => {player.invincible = false}, 300);
                 
                 player.health -= 20;
+                player.regeneration_interrupt = true;
+                setTimeout(() => {
+                    player.regeneration_interrupt = false;
+                }, 8000)
                 
                 if (player.health <= 0) {
                     cancelAnimationFrame(animation_id);
@@ -475,6 +479,15 @@ function start() {
     
     setInterval(() => {
         score += 1;
+    }, 200);
+
+    setInterval(() => {
+        for (const player in players) {
+            if (!player.regeneration_interrupt && player.health < player.max_health) {
+                player.health += Math.ceil(player.max_health / 20);
+                player.health = Math.min(player.health, player.max_health);
+            }
+        }
     }, 300);
     
     function gameLoop() {

@@ -36,6 +36,7 @@ let square_amount = 5;
 let keys_pressed = [];
 let speed_boost = 0;
 
+let transition = false;
 let score = 0;
 
 const start_button = {
@@ -131,6 +132,26 @@ function clickHandler(e) {
 
 function draw() {
     if (!running) return;
+    
+    if (transition) {
+        staticInterval = setInterval(() => {
+            clearCanvas();
+            
+            let image = ctx.createImageData(canvas.width, canvas.height);
+            let data = image.data;
+            
+            for (let i = 0; i < data.length; i += 4) {
+                let color = Math.random() < 0.5 ? 0 : 255;
+                
+                data[i] = data[i + 1] = data[i + 2] = color;
+                data[i + 3] = 255;
+            };
+            
+            ctx.putImageData(image, 0, 0);
+        }, 50);
+    } else if (typeof staticInterval !== 'undefined') {
+        clearInterval(staticInterval);
+    };
     
     clearCanvas();
     
@@ -256,9 +277,43 @@ function draw() {
 
 function start() {
     const bossMusic = new Audio("assets/audio/final_boss_1.mp3");
-    bossMusic.loop = true;
+    const bossMusic2 = new Audio("assets/audio/final_boss_2.mp3");
+    const transition = new Audio("assets/audio/static.mp3");
+    
     bossMusic.volume = 1;
-    bossMusic.play();
+    bossMusic2.volume = 1;
+    transition.volume = 1;
+    
+    bossMusic.loop = false;
+    bossMusic2.loop = false;
+    transition.loop = false;
+    
+    let current = bossMusic;
+    
+    bossMusic.addEventListener('ended', () => {
+        current = bossMusic2
+        transition.play();
+        player.invincible = true;
+        
+        transition = true;
+    });
+    
+    bossMusic2.addEventListener('ended', () => {
+        current = bossMusic;
+        transition.play();
+        player.invincible = true;
+        
+        transition = true;
+    });
+    
+    transition.addEventListener('ended', () => {
+        transition = false;
+        
+        player.invincible = false;
+        current.play();
+    });
+    
+    current.play();
     
     let player = {
         x: (CANVAS_WIDTH / 2) - SQUARE_SIZE,
@@ -270,7 +325,7 @@ function start() {
             invincible: "#f54024"
         },
         speed: 10,
-        invincibility: false,
+        invincible: false,
         health: 100,
         max_health: 100,
         id: 1

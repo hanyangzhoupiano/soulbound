@@ -39,6 +39,16 @@ let speed_boost = 0;
 let transition_effect = false;
 let score = 0;
 
+let file_text = ``;
+let save_files = [
+    {},
+    {},
+    {},
+    {},
+    {},
+    {}
+];
+
 const start_button = {
     x: (CANVAS_WIDTH / 2) - Math.ceil(CANVAS_WIDTH / 10),
     y: (CANVAS_HEIGHT / 2) + Math.ceil(CANVAS_HEIGHT / 8),
@@ -100,6 +110,88 @@ let wall = (x, y, width, height) => {
     return false;
 };
 
+let save = (file) => {
+    let data = save_files[file - 1];
+    if (data) {
+        let text = `FILE ${file} SAVED`;
+        
+        file_text = text;
+        setTimeout(() => {
+            if (file_text == text) {
+                file_text = ``;
+            }
+        }, 1400);
+        
+        data.players = [];
+        data.squares = [];
+        
+        for (const player in players) {
+            data.players.push({
+                x: player.x,
+                y: player.y,
+                health: player.health,
+                speed: player.speed,
+                invincible: player.invincible,
+                dash: player.dash,
+                id: player.id
+            });
+        };
+
+        for (const square in squares) {
+            data.squares.push({
+                x: square.x,
+                y: square.y,
+                vx: square.vx,
+                vy: square.vy,
+                color: square.color
+            });
+        };
+    }
+};
+
+let load = (file) => {
+    let data = save_files[file - 1];
+    if (data) {
+        let text = `FILE ${file} LOADED`;
+        
+        file_text = text;
+        setTimeout(() => {
+            if (file_text == text) {
+                file_text = ``;
+            }
+        }, 1400);
+        
+        if (data.players && data.squares) {
+            for (const player in players) {
+                data.players.forEach((save_state) => {
+                    if (save_state.id == player.id) {
+                        player.x = save_state.x;
+                        player.y = save_state.y;
+                        
+                        player.health = save_state.health;
+                        player.speed = save_state.speed;
+                        player.invincible = save_state.invincible;
+                        player.dash = save_state.dash;
+                    }
+                });
+            }
+    
+            for (const square in squares) {
+                data.squares.forEach((save_state) => {
+                    if (save_state.id == square.id) {
+                        square.x = save_state.x;
+                        square.y = save_state.y;
+                        
+                        square.vx = save_state.vx;
+                        square.vy = save_state.vy;
+                        square.color = save_state.color;
+                    }
+                });
+            }
+        }
+    }
+};
+
 /* USER INPUT */
 
 function keyDownHandler(e) {
@@ -130,6 +222,8 @@ function clickHandler(e) {
     }
 }
 
+/* RENDERING */
+
 function renderStaticEffectFrame() {
     const image = ctx.createImageData(CANVAS_WIDTH, CANVAS_HEIGHT);
     const data = image.data;
@@ -148,7 +242,11 @@ function draw() {
     
     clearCanvas();
     
-    drawText(CANVAS_WIDTH / 2, 20, "18px Arial", "Score: " + score, "#000000");
+    drawText(CANVAS_WIDTH / 2, 20, "24px Arial", "Score: " + score, "#000000");
+
+    if (file_text) {
+        drawText(20, CANVAS_HEIGHT - 20, "36px Arial", file_text, "#f7f72f");
+    };
     
     for (const square of squares) {
         drawRect(square.x, square.y, square.width, square.height, "#000000");
@@ -332,6 +430,7 @@ function start() {
         },
         speed: 10,
         invincible: false,
+        dash: false,
         health: 100,
         max_health: 100,
         id: 1
@@ -364,11 +463,15 @@ function start() {
     }
     
     setInterval(() => {
-        if (Math.random() < 0.2 && !speed_boost) {
-            speed_boost = 5;
-            setTimeout(() => {speed_boost = 0}, 650);
+        if (Math.random() < 0.2) {
+            let file = Math.floor(Math.random() * 6) + 1;
+            
+            save(file);
+            setTimeout(() => {
+                load(file);
+            }, 3500);
         }
-    }, 2000);
+    }, 10000);
     
     setInterval(() => {
         score += 1;

@@ -226,7 +226,7 @@ function clickHandler(e) {
 /* RENDERING */
 
 function renderStaticEffectFrame() {
-    const image = ctx.createImageData(CANVAS_WIDTH, CANVAS_HEIGHT);
+    const image = ctx.createImageData(canvas.width, canvas.height);
     const data = image.data;
 
     for (let i = 0; i < data.length; i += 4) {

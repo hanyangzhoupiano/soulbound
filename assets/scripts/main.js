@@ -36,7 +36,7 @@ let square_amount = 5;
 let keys_pressed = [];
 let speed_boost = 0;
 
-let transition = false;
+let transition_effect = false;
 let score = 0;
 
 const start_button = {
@@ -133,7 +133,7 @@ function clickHandler(e) {
 function draw() {
     if (!running) return;
     
-    if (transition) {
+    if (transition_effect) {
         staticInterval = setInterval(() => {
             clearCanvas();
             
@@ -295,7 +295,7 @@ function start() {
         transition.play();
         player.invincible = true;
         
-        transition = true;
+        transition_effect = true;
     });
     
     bossMusic2.addEventListener('ended', () => {
@@ -303,11 +303,11 @@ function start() {
         transition.play();
         player.invincible = true;
         
-        transition = true;
+        transition_effect = true;
     });
     
     transition.addEventListener('ended', () => {
-        transition = false;
+        transition_effect = false;
         
         player.invincible = false;
         current.play();

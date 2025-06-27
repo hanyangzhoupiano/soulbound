@@ -125,7 +125,7 @@ let save = (file) => {
         data.players = [];
         data.squares = [];
         
-        for (const player in players) {
+        for (const player of players) {
             data.players.push({
                 x: player.x,
                 y: player.y,
@@ -137,13 +137,14 @@ let save = (file) => {
             });
         };
 
-        for (const square in squares) {
+        for (const square of squares) {
             data.squares.push({
                 x: square.x,
                 y: square.y,
                 vx: square.vx,
                 vy: square.vy,
-                color: square.color
+                color: square.color,
+                id: square.id
             });
         };
     }
@@ -162,7 +163,7 @@ let load = (file) => {
         }, 1400);
         
         if (data.players && data.squares) {
-            for (const player in players) {
+            for (const player of players) {
                 data.players.forEach((save_state) => {
                     if (save_state.id == player.id) {
                         player.x = save_state.x;
@@ -176,7 +177,7 @@ let load = (file) => {
                 });
             }
     
-            for (const square in squares) {
+            for (const square of squares) {
                 data.squares.forEach((save_state) => {
                     if (save_state.id == square.id) {
                         square.x = save_state.x;
@@ -245,7 +246,7 @@ function draw() {
     drawText(CANVAS_WIDTH / 2, 20, "24px Arial", "Score: " + score, "#000000");
 
     if (file_text) {
-        drawText(20, CANVAS_HEIGHT - 20, "36px Arial", file_text, "#f7f72f");
+        drawText(40, CANVAS_HEIGHT - 20, "36px Arial", file_text, "#f7f72f");
     };
     
     for (const square of squares) {
@@ -475,7 +476,7 @@ function start() {
                 load(file);
             }, 3500);
         }
-    }, 10000);
+    }, 5000);
     
     setInterval(() => {
         score += 1;

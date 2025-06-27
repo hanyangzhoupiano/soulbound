@@ -130,27 +130,25 @@ function clickHandler(e) {
     }
 }
 
+function renderStaticEffectFrame() {
+    const image = ctx.createImageData(CANVAS_WIDTH, CANVAS_HEIGHT);
+    const data = image.data;
+
+    for (let i = 0; i < data.length; i += 4) {
+        const shade = Math.random() < 0.5 ? 0 : 255;
+        data[i] = data[i + 1] = data[i + 2] = shade;
+        data[i + 3] = 255;
+    }
+
+    ctx.putImageData(image, 0, 0);
+}
+
 function draw() {
     if (!running) return;
     
     if (transition_effect) {
-        staticInterval = setInterval(() => {
-            clearCanvas();
-            
-            let image = ctx.createImageData(canvas.width, canvas.height);
-            let data = image.data;
-            
-            for (let i = 0; i < data.length; i += 4) {
-                let color = Math.random() < 0.5 ? 0 : 255;
-                
-                data[i] = data[i + 1] = data[i + 2] = color;
-                data[i + 3] = 255;
-            };
-            
-            ctx.putImageData(image, 0, 0);
-        }, 50);
-    } else if (typeof staticInterval !== 'undefined') {
-        clearInterval(staticInterval);
+        renderStaticEffectFrame();
+        return;
     };
     
     clearCanvas();

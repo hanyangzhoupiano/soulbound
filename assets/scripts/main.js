@@ -201,7 +201,7 @@ function draw() {
         }
         
         for (const player of players) {
-            if (!player.invincible && collision(new_x, new_y, square.width, square.height, player.x, player.y, player.width, player.height)) {
+            if (!player.dash && !player.invincible && collision(new_x, new_y, square.width, square.height, player.x, player.y, player.width, player.height)) {
                 player.invincible = true;
                 setTimeout(() => {player.invincible = false}, 300);
                 
@@ -249,6 +249,18 @@ function draw() {
         if (keys_pressed.includes("s")) dy += 1;
         if (keys_pressed.includes("a")) dx -= 1;
         if (keys_pressed.includes("d")) dx += 1;
+        if (keys_pressed.includes("q")) {
+            if (!player.dash_cooldown) {
+                let original_speed = player.speed;
+
+                player.speed += 5;
+                player.dash = true;
+                
+                player.dash_cooldown = true;
+                setTimeout(() => {player.dash_cooldown = false}, 2000);
+                setTimeout(() => {player.speed = original_speed; player.dash = false}, 450);
+            }
+        };
         
         if (dx !== 0 || dy !== 0) {
             const len = Math.sqrt(dx * dx + dy * dy);
@@ -266,7 +278,7 @@ function draw() {
         player.y = Math.min(player.y, CANVAS_HEIGHT - SQUARE_SIZE)
         
         drawRect(player.x, player.y, player.width, player.height, "#000000");
-        drawRect(player.x + 4, player.y + 4, player.width - 8, player.height - 8, player.invincible ? player.color.invincible : player.color.normal);
+        drawRect(player.x + 4, player.y + 4, player.width - 8, player.height - 8, player.invincible ? player.color.invincible : (player.dash ? player.color.dash : player.color.normal));
         
         drawRect(player.x - 4, player.y - 30, player.width + 8, 15, "#000000");
         drawRect(player.x - 2, player.y - 28, Math.ceil((player.health / player.max_health) * (player.width + 4)), 11, "#22f22c");
@@ -320,7 +332,8 @@ function start() {
         height: SQUARE_SIZE,
         color: {
             normal: "#4287f5",
-            invincible: "#f54024"
+            invincible: "#f54024",
+            dash: "#ffffff"
         },
         speed: 10,
         invincible: false,
@@ -358,7 +371,7 @@ function start() {
     setInterval(() => {
         if (Math.random() < 0.2 && !speed_boost) {
             speed_boost = 5;
-            setTimeout(() => {speed_boost = 0}, 850);
+            setTimeout(() => {speed_boost = 0}, 650);
         }
     }, 2000);
     

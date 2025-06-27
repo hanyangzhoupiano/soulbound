@@ -146,11 +146,6 @@ function renderStaticEffectFrame() {
 function draw() {
     if (!running) return;
     
-    if (transition_effect) {
-        renderStaticEffectFrame();
-        return;
-    };
-    
     clearCanvas();
     
     drawText(CANVAS_WIDTH / 2, 20, "18px Arial", "Score: " + score, "#000000");
@@ -380,7 +375,11 @@ function start() {
     }, 300);
     
     function gameLoop() {
-        draw();
+        if (transition_effect) {
+            renderStaticEffectFrame();
+        } else {
+            draw();
+        }
         animation_id = requestAnimationFrame(gameLoop);
     }
     

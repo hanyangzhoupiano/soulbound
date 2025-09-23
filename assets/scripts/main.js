@@ -40,3 +40,5 @@ function draw() {
 function init() {
     setInterval(draw, 1000 / FPS);
 }
+
+document.addEventListener("DOMContentLoaded", init);

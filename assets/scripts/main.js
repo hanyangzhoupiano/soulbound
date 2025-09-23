@@ -25,7 +25,6 @@ const SQUARE_SIZE = Math.ceil(CANVAS_WIDTH / 20);
 let x = CANVAS_WIDTH / 2 - SQUARE_SIZE;
 let y = CANVAS_WIDTH / 2 - SQUARE_SIZE;
 let angle = 0;
-
 const radius = 5;
 
 /* code */
@@ -33,6 +32,8 @@ const radius = 5;
 function draw() {
     ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
     ctx.fillRect(x + (radius * Math.cos(angle)), x + (radius * Math.cos(angle)), SQUARE_SIZE, SQUARE_SIZE);
+
+    angle += 1;
 }
 
 /* main loop */

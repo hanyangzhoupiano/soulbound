@@ -31,9 +31,9 @@ const radius = 5;
 
 function draw() {
     ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-    ctx.fillRect(x + (radius * Math.cos(angle)), x + (radius * Math.cos(angle)), SQUARE_SIZE, SQUARE_SIZE);
+    ctx.fillRect(x + (radius * Math.cos(angle)), x + (radius * Math.sin(angle)), SQUARE_SIZE, SQUARE_SIZE);
 
-    angle += 1;
+    angle += 0.05;
 }
 
 /* main loop */

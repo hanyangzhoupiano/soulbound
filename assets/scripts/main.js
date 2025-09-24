@@ -1,10 +1,8 @@
 /* CONSTANTS */
-
-const canvas = $("#canvas");
+const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
 /* SCALING */
-
 const dpr = window.devicePixelRatio || 1;
 const rect = canvas.getBoundingClientRect();
 
@@ -14,7 +12,6 @@ canvas.height = rect.height * dpr;
 ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
 /* SETTINGS */
-
 const FPS = 50;
 
 const CANVAS_WIDTH = canvas.width / dpr;
@@ -22,22 +19,26 @@ const CANVAS_HEIGHT = canvas.height / dpr;
 
 const SQUARE_SIZE = Math.ceil(CANVAS_WIDTH / 20);
 
-let x = CANVAS_WIDTH / 2 - SQUARE_SIZE;
-let y = CANVAS_HEIGHT / 2 - SQUARE_SIZE;
+// orbit center (canvas center)
+const centerX = CANVAS_WIDTH / 2;
+const centerY = CANVAS_HEIGHT / 2;
+
 let angle = 0;
-const radius = 5;
+const radius = 100;
 
 /* code */
-
 function draw() {
     ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-    ctx.fillRect(x + (radius * Math.cos(angle)), x + (radius * Math.sin(angle)), SQUARE_SIZE, SQUARE_SIZE);
+
+    const x = centerX + radius * Math.cos(angle) - SQUARE_SIZE / 2;
+    const y = centerY + radius * Math.sin(angle) - SQUARE_SIZE / 2;
+
+    ctx.fillRect(x, y, SQUARE_SIZE, SQUARE_SIZE);
 
     angle += 0.05;
 }
 
 /* main loop */
-
 function init() {
     setInterval(draw, 1000 / FPS);
 }

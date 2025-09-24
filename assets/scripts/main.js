@@ -23,7 +23,7 @@ const CANVAS_HEIGHT = canvas.height / dpr;
 const SQUARE_SIZE = Math.ceil(CANVAS_WIDTH / 20);
 
 let x = CANVAS_WIDTH / 2 - SQUARE_SIZE;
-let y = CANVAS_WIDTH / 2 - SQUARE_SIZE;
+let y = CANVAS_HEIGHT / 2 - SQUARE_SIZE;
 let angle = 0;
 const radius = 5;
 

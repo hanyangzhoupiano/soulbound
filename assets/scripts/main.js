@@ -27,6 +27,11 @@ let angle = 0;
 const radius = 100;
 
 /* code */
+function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+
 function draw() {
     ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
@@ -41,6 +46,8 @@ function draw() {
 /* main loop */
 function init() {
     setInterval(draw, 1000 / FPS);
+    resizeCanvas();
 }
 
 document.addEventListener("DOMContentLoaded", init);
+window.addEventListener("resize", resizeCanvas);

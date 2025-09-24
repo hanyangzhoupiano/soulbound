@@ -24,14 +24,12 @@ const centerX = CANVAS_WIDTH / 2;
 const centerY = CANVAS_HEIGHT / 2;
 
 let angle = 0;
+let direction = 1;
 const radius = 200;
+const maxAngle = Math.PI * 2 / 3;
+const speed = 0.05;
 
 /* code */
-function resizeCanvas() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-}
-
 function draw() {
     ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
@@ -40,14 +38,16 @@ function draw() {
 
     ctx.fillRect(x, y, SQUARE_SIZE, SQUARE_SIZE);
 
-    angle += 0.05;
+    angle += direction * speed;
+
+    if (angle > maxAngle || angle < -maxAngle) {
+        direction *= -1;
+    }
 }
 
 /* main loop */
 function init() {
     setInterval(draw, 1000 / FPS);
-    resizeCanvas();
 }
 
 document.addEventListener("DOMContentLoaded", init);
-window.addEventListener("resize", resizeCanvas);

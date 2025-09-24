@@ -24,7 +24,7 @@ const centerX = CANVAS_WIDTH / 2;
 const centerY = CANVAS_HEIGHT / 2;
 
 let angle = 0;
-const radius = 100;
+const radius = 200;
 
 /* code */
 function resizeCanvas() {

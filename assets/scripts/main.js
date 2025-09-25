@@ -26,7 +26,7 @@ const centerY = CANVAS_HEIGHT / 2;
 let angle = 0;
 let direction = 1;
 const radius = 200;
-const maxAngle = Math.PI * 2 / 3;
+const maxAngle = Math.PI * 2 / 6;
 const speed = 0.05;
 
 /* code */

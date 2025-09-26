@@ -43,13 +43,31 @@ players.push({
 });
 
 /* code */
+function keyDownHandler(e) {
+    let index = keys_pressed.indexOf(e.key);
+    if (index <= -1) {
+        // add key to keys_pressed
+        
+        keys_pressed.push(e.key);
+    }
+}
+                
+function keyUpHandler(e) {
+    let index = keys_pressed.indexOf(e.key);
+    if (index > -1) {
+        // remove key from keys_pressed
+        
+        keys_pressed.splice(index, 1);
+    }
+}
+
 function draw() {
     ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
     cube_things.forEach((cube_thing) => {
         players.forEach((plr) => {
             if (plr.id === cube_thing.id) {
-                cube_thing.orbit_center = [player.x, player.y];
+                cube_thing.orbit_center = [plr.x, plr.y];
             }
         });
         
@@ -106,6 +124,11 @@ function draw() {
 /* main loop */
 function init() {
     setInterval(draw, 1000 / FPS);
+    
+    // input handling
+                  
+    document.body.addEventListener("keydown", keyDownHandler);
+    document.body.addEventListener("keyup", keyUpHandler);
 }
 
 document.addEventListener("DOMContentLoaded", init);

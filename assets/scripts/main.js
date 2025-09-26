@@ -83,11 +83,6 @@ function draw() {
         if (cube_thing.angle > cube_thing.maxAngle || cube_thing.angle < -cube_thing.maxAngle) {
             cube_thing.direction *= -1;
         }
-
-        // reverse direction if hitting a wall
-        if (cube_thing.x >= CANVAS_WIDTH - SQUARE_SIZE / 2 || cube_thing.y >= CANVAS_HEIGHT - SQUARE_SIZE / 2 || cube_thing.x <= 0 || cube_thing.y <= 0) {
-            cube_thing.direction *= -1;
-        }
         
         // draw cube thing
         ctx.fillStyle = "#3683ff";

@@ -105,8 +105,8 @@ function draw() {
                     plr.y += key_info.amount[1];
 
                     // prevent player from going out of bounds
-                    plr.x = Math.min(plr.x, CANVAS_WIDTH);
-                    plr.y = Math.min(plr.y, CANVAS_HEIGHT);
+                    plr.x = Math.min(plr.x, CANVAS_WIDTH - SQUARE_SIZE);
+                    plr.y = Math.min(plr.y, CANVAS_HEIGHT - SQUARE_SIZE);
 
                     plr.x = Math.max(plr.x, 0);
                     plr.y = Math.max(plr.y, 0);

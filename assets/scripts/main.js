@@ -19,30 +19,88 @@ const CANVAS_HEIGHT = canvas.height / dpr;
 
 const SQUARE_SIZE = Math.ceil(CANVAS_WIDTH / 20);
 
-// orbit center (canvas center)
-const centerX = CANVAS_WIDTH / 2;
-const centerY = CANVAS_HEIGHT / 2;
+/* VARIABLES */
 
-let angle = 0;
-let direction = 1;
-const radius = 200;
-const maxAngle = Math.PI * 2 / 6;
-const speed = 0.05;
+let keys_pressed = [];
+
+let cube_things = [];
+let players = [];
+
+cube_things.push({
+    orbit_center: [CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2],
+    x: CANVAS_WIDTH / 2,
+    y: CANVAS_HEIGHT / 2,
+    direction: 1,
+    radius: 200,
+    maxAngle: Math.PI * 2 / 6,
+    speed: 0.05,
+    id: 1
+});
+players.push({
+    x: CANVAS_WIDTH / 2,
+    y: CANVAS_HEIGHT / 2,
+    id: 1
+});
 
 /* code */
 function draw() {
     ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
-    const x = centerX + radius * Math.cos(angle) - SQUARE_SIZE / 2;
-    const y = centerY + radius * Math.sin(angle) - SQUARE_SIZE / 2;
+    cube_things.forEach((cube_thing) => {
+        players.forEach((plr) => {
+            if (plr.id === cube_thing.id) {
+                cube_thing.orbit_center = [player.x, player.y];
+            }
+        });
+        
+        // update cube thing and spin it a little
+        cube_thing.x = cube_thing.orbit_center[0] + cube_thing.radius * Math.cos(cube_thing.angle) - SQUARE_SIZE / 2;
+        cube_thing.y = cube_thing.orbit_center[1] + cube_thing.radius * Math.sin(cube_thing.angle) - SQUARE_SIZE / 2;
 
-    ctx.fillRect(x, y, SQUARE_SIZE, SQUARE_SIZE);
+        // update angle
+        cube_thing.angle += cube_thing.direction * cube_thing.speed;
 
-    angle += direction * speed;
+        // reverse direction if angle exceeds maxAngle in either direction
+        if (cube_thing.angle > cube_thing.maxAngle || cube_thing.angle < -cube_thing.maxAngle) {
+            cube_thing.direction *= -1;
+        }
+        
+        // draw cube thing
+        ctx.fillRect(cube_thing.x, cube_thing.y, SQUARE_SIZE, SQUARE_SIZE);
+    })
 
-    if (angle > maxAngle || angle < -maxAngle) {
-        direction *= -1;
-    }
+    // monitor keys pressed
+    keys_pressed.forEach((key) => {
+        let key_table = {
+            "w": {action: "move", amount: [0, -2]},
+            "a": {action: "move", amount: [-2, 0]},
+            "s": {action: "move", amount: [0, 2]},
+            "d": {action: "move", amount: [2, 0]}
+        }
+        
+        if (key in key_table) {
+            let key_info = key_table[key];
+
+            if (key_info.action === "move") {
+                players.forEach((plr) => {
+                    plr.x += key_info.amount[0];
+                    plr.y += key_info.amount[1];
+
+                    // prevent player from going out of bounds
+                    plr.x = min(plr.x, CANVAS_WIDTH);
+                    plr.y = min(plr.y, CANVAS_HEIGHT);
+
+                    plr.x = max(plr.x, 0);
+                    plr.y = max(plr.y, 0);
+                });
+            }
+        }
+    });
+
+    // draw players
+    players.forEach((plr) => {
+        ctx.fillRect(plr.x, plr.y, SQUARE_SIZE, SQUARE_SIZE);
+    });
 }
 
 /* main loop */

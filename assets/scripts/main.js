@@ -68,7 +68,7 @@ function draw() {
     cube_things.forEach((cube_thing) => {
         players.forEach((plr) => {
             if (plr.id === cube_thing.id) {
-                cube_thing.orbit_center = [plr.x, plr.y];
+                cube_thing.orbit_center = [plr.x + SQUARE_SIZE / 2, plr.y + SQUARE_SIZE / 2];
             }
         });
         

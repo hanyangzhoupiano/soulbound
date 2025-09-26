@@ -124,7 +124,7 @@ function draw() {
             window.location.reload();
         }
 
-        ctx.fillStyle = "#ffffff";
+        ctx.fillStyle = "#000000";
         ctx.fillRect(enemy.x, enemy.y, SQUARE_SIZE, SQUARE_SIZE);
     });
 

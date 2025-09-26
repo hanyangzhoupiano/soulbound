@@ -106,8 +106,8 @@ function draw() {
 
     // move enemies + draw enemies
     enemies.forEach((enemy) => {
-        enemy.y -= 2;
-        if (enemy.y <= 0) {
+        enemy.x -= 2;
+        if (enemy.x <= 0) {
             let index = enemies.indexOf(enemy);
             if (index > -1) {
                 enemies.splice(index, 1)

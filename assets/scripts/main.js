@@ -170,7 +170,7 @@ function init() {
             x: CANVAS_WIDTH,
             y: Math.floor(Math.random() * (CANVAS_HEIGHT - SQUARE_SIZE - 20) + 20)
         });
-    }, Math.floor(Math.random() * 1700 + 300));
+    }, Math.floor(Math.random() * 700 + 300));
     
     // input handling
                   

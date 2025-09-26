@@ -107,6 +107,9 @@ function draw() {
     // move enemies + draw enemies
     enemies.forEach((enemy) => {
         enemy.x -= 2;
+        if (Math.random() < 0.2) {
+            enemy.x -= 5;
+        }
         if (enemy.x <= 0) {
             let index = enemies.indexOf(enemy);
             if (index > -1) {

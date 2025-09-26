@@ -27,6 +27,8 @@ let cube_things = [];
 let players = [];
 let enemies = [];
 
+let enemy_speed = 2;
+
 cube_things.push({
     orbit_center: [CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2],
     x: CANVAS_WIDTH / 2,
@@ -106,10 +108,7 @@ function draw() {
 
     // move enemies + draw enemies
     enemies.forEach((enemy) => {
-        enemy.x -= 2;
-        if (Math.random() < 0.2) {
-            enemy.x -= 5;
-        }
+        enemy.x -= enemy_speed;
         if (enemy.x <= 0) {
             /*
             let index = enemies.indexOf(enemy);
@@ -181,6 +180,12 @@ function init() {
             y: Math.floor(Math.random() * (CANVAS_HEIGHT - SQUARE_SIZE - 20) + 20)
         });
     }, Math.floor(Math.random() * 1700 + 300));
+    window.dashInterval = setInterval(function() {
+        if (enemy_speed === 2) {
+            enemy_speed = 5;
+            setTimeout(function() {enemy_speed = 2}, 600);
+        }
+    }, Math.floor(Math.random() * 2200 + 800));
     
     // input handling
                   

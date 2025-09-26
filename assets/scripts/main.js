@@ -25,6 +25,7 @@ let keys_pressed = [];
 
 let cube_things = [];
 let players = [];
+let enemies = [];
 
 cube_things.push({
     orbit_center: [CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2],
@@ -37,6 +38,7 @@ cube_things.push({
     speed: 0.05,
     id: 1
 });
+
 players.push({
     x: CANVAS_WIDTH / 2,
     y: CANVAS_HEIGHT / 2,
@@ -62,6 +64,10 @@ function keyUpHandler(e) {
     }
 }
 
+function collision(x1, y1, width1, height1, x2, y2, width2, height2) {
+    return !(x1 + width1 <= x2 || x1 >= x2 + width2 || y1 + height1 <= y2 || y1 >= y2 + height2);
+};
+
 function draw() {
     ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
@@ -83,19 +89,42 @@ function draw() {
         if (cube_thing.angle > cube_thing.maxAngle || cube_thing.angle < -cube_thing.maxAngle) {
             cube_thing.direction *= -1;
         }
+
+        enemies.forEach((enemy) => {
+            if (collision(cube_thing.x, cube_thing.y, SQUARE_SIZE, SQUARE_SIZE, enemy.x, enemy.y, SQUARE_SIZE, SQUARE_SIZE)) {
+                let index = enemies.indexOf(enemy);
+                if (index > -1) {
+                    enemies.splice(index, 1)
+                }
+            }
+        })
         
         // draw cube thing
         ctx.fillStyle = "#3683ff";
-        ctx.fillRect(cube_thing.x, cube_thing.y, SQUARE_SIZE / 2, SQUARE_SIZE / 2);
+        ctx.fillRect(cube_thing.x, cube_thing.y, SQUARE_SIZE, SQUARE_SIZE);
     })
+
+    // move enemies + draw enemies
+    enemies.forEach((enemy) => {
+        enemy.y -= 2;
+        if (enemy.y <= 0) {
+            let index = enemies.indexOf(enemy);
+            if (index > -1) {
+                enemies.splice(index, 1)
+            }
+        }
+
+        ctx.fillStyle = "#000000";
+        ctx.fillRect(enemy.x, enemy.y, SQUARE_SIZE, SQUARE_SIZE);
+    });
 
     // monitor keys pressed
     keys_pressed.forEach((key) => {
         let key_table = {
-            "w": {action: "move", amount: [0, -2]},
-            "a": {action: "move", amount: [-2, 0]},
-            "s": {action: "move", amount: [0, 2]},
-            "d": {action: "move", amount: [2, 0]}
+            "w": {action: "move", amount: [0, -3]},
+            "a": {action: "move", amount: [-3, 0]},
+            "s": {action: "move", amount: [0, 3]},
+            "d": {action: "move", amount: [3, 0]}
         }
         
         if (key in key_table) {
@@ -117,8 +146,17 @@ function draw() {
         }
     });
 
-    // draw players
+    // draw players + enemy collision
     players.forEach((plr) => {
+        enemies.forEach((enemy) => {
+            if (collision(plr.x, plr.y, SQUARE_SIZE, SQUARE_SIZE, enemy.x, enemy.y, SQUARE_SIZE, SQUARE_SIZE)) {
+                clearInterval(window.drawInterval);
+                clearInterval(window.enemyInterval);
+                alert("You lose!")
+                window.reload();
+            }
+        })
+        
         ctx.fillStyle = "#f54531";
         ctx.fillRect(plr.x, plr.y, SQUARE_SIZE, SQUARE_SIZE);
     });
@@ -126,7 +164,13 @@ function draw() {
 
 /* main loop */
 function init() {
-    setInterval(draw, 1000 / FPS);
+    window.drawInterval = setInterval(draw, 1000 / FPS);
+    window.enemyInterval = setInterval(function() {
+        enemies.push({
+            x: CANVAS_WIDTH,
+            y: Math.floor(Math.random() * (CANVAS_HEIGHT - SQUARE_SIZE - 20) + 20)
+        });
+    }, Math.floor(Math.random() * 1700 + 300));
     
     // input handling
                   

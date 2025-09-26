@@ -32,6 +32,7 @@ cube_things.push({
     y: CANVAS_HEIGHT / 2,
     direction: 1,
     radius: 200,
+    angle: 0,
     maxAngle: Math.PI * 2 / 6,
     speed: 0.05,
     id: 1

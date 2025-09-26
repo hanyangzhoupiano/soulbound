@@ -9,6 +9,7 @@ html, body {
     overflow: hidden; /* prevents scrolling */
 }
 canvas {
+    background-color: "#000000";
     display: block; /* removes inline spacing */
     width: 100vw;   /* full viewport width */
     height: 100vh;  /* full viewport height */

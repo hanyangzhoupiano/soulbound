@@ -153,7 +153,7 @@ function draw() {
                 clearInterval(window.drawInterval);
                 clearInterval(window.enemyInterval);
                 alert("You lose!")
-                window.reload();
+                window.location.reload();
             }
         })
         

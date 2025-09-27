@@ -29,6 +29,8 @@ let enemies = [];
 
 let enemy_speed = 2;
 
+let score = 0;
+
 cube_things.push({
     orbit_center: [CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2],
     x: CANVAS_WIDTH / 2,
@@ -97,6 +99,8 @@ function draw() {
                 let index = enemies.indexOf(enemy);
                 if (index > -1) {
                     enemies.splice(index, 1)
+
+                    score++;
                 }
             }
         })
@@ -120,6 +124,7 @@ function draw() {
             clearInterval(window.drawInterval);
             clearInterval(window.enemyInterval);
             alert("You lose! (an enemy made it past you)")
+            alert("Score: " + toString(score))
             window.location.reload();
         }
 
@@ -162,6 +167,7 @@ function draw() {
                 clearInterval(window.drawInterval);
                 clearInterval(window.enemyInterval);
                 alert("You lose!")
+                alert("Score: " + toString(score))
                 window.location.reload();
             }
         })

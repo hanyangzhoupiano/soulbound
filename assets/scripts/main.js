@@ -181,11 +181,13 @@ function init() {
         });
     }, Math.floor(Math.random() * 1700 + 300));
     window.dashInterval = setInterval(function() {
-        if (enemy_speed === 2) {
-            enemy_speed = 5;
-            setTimeout(function() {enemy_speed = 2}, 600);
-        }
-    }, Math.floor(Math.random() * 2200 + 800));
+        setTimeout(function() {
+            if (enemy_speed === 2) {
+                enemy_speed = 5;
+                setTimeout(function() {enemy_speed = 2}, 600);
+            }
+        }, Math.floor(Math.random() * 1500 + 500));
+    }, 1000);
     
     // input handling
                   

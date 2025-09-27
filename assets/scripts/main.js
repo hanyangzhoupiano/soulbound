@@ -135,10 +135,10 @@ function draw() {
     // monitor keys pressed
     keys_pressed.forEach((key) => {
         let key_table = {
-            "w": {action: "move", amount: [0, -3]},
-            "a": {action: "move", amount: [-3, 0]},
-            "s": {action: "move", amount: [0, 3]},
-            "d": {action: "move", amount: [3, 0]}
+            "w": {action: "move", amount: [0, -5]},
+            "a": {action: "move", amount: [-5, 0]},
+            "s": {action: "move", amount: [0, 5]},
+            "d": {action: "move", amount: [5, 0]}
         }
         
         if (key in key_table) {

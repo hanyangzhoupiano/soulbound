@@ -108,7 +108,7 @@ function draw() {
 
     // move enemies + draw enemies
     enemies.forEach((enemy) => {
-        enemy.x -= enemy_speed;
+        enemy.x -= enemy.multiplier * enemy_speed;
         if (enemy.x <= 0) {
             /*
             let index = enemies.indexOf(enemy);
@@ -177,7 +177,8 @@ function init() {
     window.enemyInterval = setInterval(function() {
         enemies.push({
             x: CANVAS_WIDTH,
-            y: Math.floor(Math.random() * (CANVAS_HEIGHT - SQUARE_SIZE - 20) + 20)
+            y: Math.floor(Math.random() * (CANVAS_HEIGHT - SQUARE_SIZE - 20) + 20),
+            multiplier: Math.random() < 0.2 ? 2 : 1
         });
     }, Math.floor(Math.random() * 1700 + 300));
     window.dashInterval = setInterval(function() {

@@ -124,7 +124,7 @@ function draw() {
             clearInterval(window.drawInterval);
             clearInterval(window.enemyInterval);
             alert("You lose! (an enemy made it past you)")
-            alert("Score: " + toString(score))
+            alert("Score: " + String(score))
             window.location.reload();
         }
 
@@ -167,7 +167,7 @@ function draw() {
                 clearInterval(window.drawInterval);
                 clearInterval(window.enemyInterval);
                 alert("You lose!")
-                alert("Score: " + toString(score))
+                alert("Score: " + String(score))
                 window.location.reload();
             }
         })

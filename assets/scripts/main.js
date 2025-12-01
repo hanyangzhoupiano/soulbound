@@ -94,8 +94,8 @@ function draw() {
     ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
     if (grassImg.complete) {
-        const tileW = grassImg.width;
-        const tileH = grassImg.height;
+        const tileW = 72;
+        const tileH = 72;
     
         const px = camera.x * 0.8;
         const py = camera.y * 0.8;
@@ -105,7 +105,7 @@ function draw() {
     
         for (let x = offsetX - tileW; x < CANVAS_WIDTH; x += tileW) {
             for (let y = offsetY - tileH; y < CANVAS_HEIGHT; y += tileH) {
-                ctx.drawImage(grassImg, x, y, 72, 72);
+                ctx.drawImage(grassImg, x, y, tileW, tileH);
             }
         }
     }

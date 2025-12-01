@@ -97,8 +97,8 @@ function draw() {
         const tileW = grassImg.width;
         const tileH = grassImg.height;
     
-        const px = camera.x * parallax;
-        const py = camera.y * parallax;
+        const px = camera.x * 0.8;
+        const py = camera.y * 0.8;
     
         const offsetX = -px % tileW;
         const offsetY = -py % tileH;

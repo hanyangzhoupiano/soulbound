@@ -2,6 +2,9 @@
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
+const grassImg = new Image();
+grassImg.src = "./assets/images/grass.png";
+
 /* SCALING */
 const dpr = window.devicePixelRatio || 1;
 const rect = canvas.getBoundingClientRect();
@@ -89,6 +92,23 @@ function collision(x1, y1, width1, height1, x2, y2, width2, height2) {
 
 function draw() {
     ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+
+    if (grassImg.complete) {
+        const tileW = grassImg.width;
+        const tileH = grassImg.height;
+    
+        const px = camera.x * parallax;
+        const py = camera.y * parallax;
+    
+        const offsetX = -px % tileW;
+        const offsetY = -py % tileH;
+    
+        for (let x = offsetX - tileW; x < CANVAS_WIDTH; x += tileW) {
+            for (let y = offsetY - tileH; y < CANVAS_HEIGHT; y += tileH) {
+                ctx.drawImage(grassImg, x, y);
+            }
+        }
+    }
 
     // monitor keys pressed
     keys_pressed.forEach((key) => {

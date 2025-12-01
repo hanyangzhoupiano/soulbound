@@ -115,7 +115,7 @@ function draw() {
         }
     });
 
-    player.draw()
+    player.draw(camera)
     camera.update()
 }
 

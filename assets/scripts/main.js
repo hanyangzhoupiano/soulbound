@@ -105,7 +105,7 @@ function draw() {
     
         for (let x = offsetX - tileW; x < CANVAS_WIDTH; x += tileW) {
             for (let y = offsetY - tileH; y < CANVAS_HEIGHT; y += tileH) {
-                ctx.drawImage(grassImg, x, y);
+                ctx.drawImage(grassImg, x, y, 96, 96);
             }
         }
     }

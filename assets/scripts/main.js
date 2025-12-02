@@ -1,6 +1,7 @@
 /* CONSTANTS */
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
+ctx.imageSmoothingEnabled = false;
 
 const grassImg = new Image();
 grassImg.src = "./assets/images/grass.png";
@@ -100,8 +101,8 @@ function draw() {
         const px = camera.x * 0.8;
         const py = camera.y * 0.8;
     
-        const offsetX = -px % tileW;
-        const offsetY = -py % tileH;
+        const offsetX = Math.floor(-px % tileW);
+        const offsetY = Math.floor(-py % tileH);
     
         for (let x = offsetX - tileW; x < CANVAS_WIDTH; x += tileW) {
             for (let y = offsetY - tileH; y < CANVAS_HEIGHT; y += tileH) {
